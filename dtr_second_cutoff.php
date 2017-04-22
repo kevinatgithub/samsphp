@@ -15,7 +15,7 @@ for($extratd=1;$extratd<=15;$extratd++) {
 for($dtr_days=16;$dtr_days<=31;$dtr_days++) {
 
 	$row_date = $month."/".$dtr_days."/".$year;
-	$query = "SELECT * FROM override WHERE approved_by IS NOT NULL AND employee_id = '$employee_id' AND date = '$row_date'";
+	$query = "SELECT * FROM override WHERE approved_by IS NOT NULL AND disabled_dt IS NULL AND employee_id = '$employee_id' AND date = '$row_date'";
 	$rs_overrides = mysqli_query($con,$query) or exit(mysqli_error($con));
 	$override = [];
 	if(mysqli_num_rows($rs_overrides)){
