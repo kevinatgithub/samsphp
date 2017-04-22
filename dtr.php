@@ -1,20 +1,29 @@
 <?php
 	include "config/config.php";
 
-	$employee_no = $_POST['employee_no'];
-	$month = $_POST['month'];
-	$cutoff = $_POST['cutoff'];
-	$year = $_POST['year'];
+	$employee_no = $_REQUEST['employee_no'];
+	$month = $_REQUEST['month'] * 1;
+	$cutoff = $_REQUEST['cutoff'];
+	$year = $_REQUEST['year'];
 
 	$month_days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
 
-	$employee = mysql_query("SELECT * FROM employee WHERE employee_no = '$employee_no'");
-	$row = mysql_fetch_array($employee);
+	$employee = mysqli_query($con,"SELECT * FROM employee WHERE id = '$employee_no'");
+	$row = @mysqli_fetch_array($employee);
 		$employee_id = $row['id'];
 		$print_month = strftime("%B",mktime(0,0,0,$month));
 
-		if($cutoff == 1) { $print_cutoff =  '1-15'; }
-		else if($cutoff == 2) { $print_cutoff = '16-'.$month_days; }
+		switch ($cutoff){
+			case 1:
+				$print_cutoff = '1-15';
+			break;
+			case 2:
+				$print_cutoff = '16-'.$month_days;
+			break;
+			case 3:
+			default:
+				$print_cutoff = '1-'.$month_days;
+		}
 ?>
 <!DOCTYPE html>
 <html>
@@ -43,11 +52,11 @@
 					<tr>
 						<td width="40%" class="text-left" rowspan="2">Official hours for arrival and departure</td>
 						<td class="text-right" width="30%">Regular Days</td>
-						<td width="30%" class="blank"></td>
+						<td width="30%" class="blank">&nbsp;</td>
 					</tr>
 					<tr>
 						<td class="text-right">Saturdays</td>
-						<td class="blank"></td>
+						<td class="blank">&nbsp;</td>
 					</tr>
 					<tr>
 						<td colspan="3" height="5"></td>
@@ -64,7 +73,7 @@
 						</tr>
 					</thead>
 					<tr>
-						<th></th>
+						<th>&nbsp;</th>
 						<th width="50">Arrival</th>
 						<th width="50">Departure</th>
 						<th width="50">Arrival</th>
@@ -75,264 +84,13 @@
 					<tbody>
 					<?php
 
-					if($cutoff == 1) {
-						for($dtr_days=1;$dtr_days<=15;$dtr_days++) {
-
-							print '
-								<tr>
-									<td>'.$dtr_days.'</td>
-									<td>';
-										$am1 = mysql_query("SELECT time FROM log 
-										WHERE employee_id = $employee_id
-											AND year = $year
-											AND month = $month
-											AND day = $dtr_days
-											AND type = 1");
-
-										$row_am1 = mysql_fetch_assoc($am1);
-
-											if($row_am1['time'] == '') { print ''; }
-											else { print 
-												date("h:i", strtotime($row_am1['time']));
-											}	
-
-									
-									print '</td>
-									<td>';
-										$am2 = mysql_query("SELECT time FROM log 
-										WHERE employee_id = $employee_id
-											AND year = $year
-											AND month = $month
-											AND day = $dtr_days
-											AND type = 2");
-
-										$row_am2 = mysql_fetch_assoc($am2);
-
-											if($row_am2['time'] == '') { print ''; }
-											else { print 
-												date("h:i", strtotime($row_am2['time']));
-											}	
-
-									print '</td>
-									<td>';
-										$pm1 = mysql_query("SELECT time FROM log 
-										WHERE employee_id = $employee_id
-											AND year = $year
-											AND month = $month
-											AND day = $dtr_days
-											AND type = 3");
-
-										$row_pm1 = mysql_fetch_assoc($pm1);
-
-											if($row_pm1['time'] == '') { print ''; }
-											else { print 
-												date("h:i", strtotime($row_pm1['time']));
-											}	
-
-									print '
-									</td>
-									<td>';
-										$pm2 = mysql_query("SELECT time FROM log 
-										WHERE employee_id = $employee_id
-											AND year = $year
-											AND month = $month
-											AND day = $dtr_days
-											AND type = 4");
-
-										$row_pm2 = mysql_fetch_assoc($pm2);
-
-											if($row_pm2['time'] == '') { print ''; }
-											else { print 
-												date("h:i", strtotime($row_pm2['time']));
-											}	
-									print '</td>
-									<td></td>
-									<td></td>
-								</tr>
-							';
-						}		
-
-						for($extratd=16;$extratd<=31;$extratd++) {
-							print '
-								<tr>
-									<td>'.$extratd.'</td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-								</tr>
-							';	
-						}										
-					}
-
-					elseif($cutoff == 2) {
-						for($extratd=1;$extratd<=15;$extratd++) {
-							print '
-								<tr>
-									<td>'.$extratd.'</td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-								</tr>
-							';	
-						}	
-						for($dtr_days=16;$dtr_days<=31;$dtr_days++) {
-							print '
-								<tr>
-									<td>'.$dtr_days.'</td>
-									<td>';
-										$am1 = mysql_query("SELECT time FROM log 
-										WHERE employee_id = $employee_id
-											AND year = $year
-											AND month = $month
-											AND day = $dtr_days
-											AND type = 1");
-
-										$row_am1 = mysql_fetch_assoc($am1);
-
-											if($row_am1['time'] == '') { print ''; }
-											else { print 
-												date("h:i", strtotime($row_am1['time']));
-											}	
-
-									
-									print '</td>
-									<td>';
-										$am2 = mysql_query("SELECT time FROM log 
-										WHERE employee_id = $employee_id
-											AND year = $year
-											AND month = $month
-											AND day = $dtr_days
-											AND type = 2");
-
-										$row_am2 = mysql_fetch_assoc($am2);
-
-											if($row_am2['time'] == '') { print ''; }
-											else { print 
-												date("h:i", strtotime($row_am2['time']));
-											}	
-
-									print '</td>
-									<td>';
-										$pm1 = mysql_query("SELECT time FROM log 
-										WHERE employee_id = $employee_id
-											AND year = $year
-											AND month = $month
-											AND day = $dtr_days
-											AND type = 3");
-
-										$row_pm1 = mysql_fetch_assoc($pm1);
-
-											if($row_pm1['time'] == '') { print ''; }
-											else { print 
-												date("h:i", strtotime($row_pm1['time']));
-											}	
-
-									print '
-									</td>
-									<td>';
-										$pm2 = mysql_query("SELECT time FROM log 
-										WHERE employee_id = $employee_id
-											AND year = $year
-											AND month = $month
-											AND day = $dtr_days
-											AND type = 4");
-
-										$row_pm2 = mysql_fetch_assoc($pm2);
-
-											if($row_pm2['time'] == '') { print ''; }
-											else { print 
-												date("h:i", strtotime($row_pm2['time']));
-											}	
-									print '</td>
-									<td></td>
-									<td></td>
-								</tr>
-							';
+						if($cutoff == 1) {
+							require "dtr_first_cutoff.php";									
+						}elseif($cutoff == 2) {
+							require "dtr_second_cutoff.php";
+						}elseif($cutoff == 3) {
+							require "dtr_fullmonth.php";
 						}
-					}
-
-					elseif($cutoff == 3) {
-						for($dtr_days=1;$dtr_days<=31;$dtr_days++) {
-							print '
-								<tr>
-									<td>'.$dtr_days.'</td>
-									<td>';
-										$am1 = mysql_query("SELECT time FROM log 
-										WHERE employee_id = $employee_id
-											AND year = $year
-											AND month = $month
-											AND day = $dtr_days
-											AND type = 1");
-
-										$row_am1 = mysql_fetch_assoc($am1);
-
-											if($row_am1['time'] == '') { print ''; }
-											else { print 
-												date("h:i", strtotime($row_am1['time']));
-											}	
-
-									
-									print '</td>
-									<td>';
-										$am2 = mysql_query("SELECT time FROM log 
-										WHERE employee_id = $employee_id
-											AND year = $year
-											AND month = $month
-											AND day = $dtr_days
-											AND type = 2");
-
-										$row_am2 = mysql_fetch_assoc($am2);
-
-											if($row_am2['time'] == '') { print ''; }
-											else { print 
-												date("h:i", strtotime($row_am2['time']));
-											}	
-
-									print '</td>
-									<td>';
-										$pm1 = mysql_query("SELECT time FROM log 
-										WHERE employee_id = $employee_id
-											AND year = $year
-											AND month = $month
-											AND day = $dtr_days
-											AND type = 3");
-
-										$row_pm1 = mysql_fetch_assoc($pm1);
-
-											if($row_pm1['time'] == '') { print ''; }
-											else { print 
-												date("h:i", strtotime($row_pm1['time']));
-											}	
-
-									print '
-									</td>
-									<td>';
-										$pm2 = mysql_query("SELECT time FROM log 
-										WHERE employee_id = $employee_id
-											AND year = $year
-											AND month = $month
-											AND day = $dtr_days
-											AND type = 4");
-
-										$row_pm2 = mysql_fetch_assoc($pm2);
-
-											if($row_pm2['time'] == '') { print ''; }
-											else { print 
-												date("h:i", strtotime($row_pm2['time']));
-											}	
-									print '</td>
-									<td></td>
-									<td></td>
-								</tr>
-							';
-						}
-					}
 
 					?>
 					</tbody>
@@ -389,11 +147,11 @@
 					<tr>
 						<td width="40%" class="text-left" rowspan="2">Official hours for arrival and departure</td>
 						<td class="text-right" width="30%">Regular Days</td>
-						<td width="30%" class="blank"></td>
+						<td width="30%" class="blank">&nbsp;</td>
 					</tr>
 					<tr>
 						<td class="text-right">Saturdays</td>
-						<td class="blank"></td>
+						<td class="blank">&nbsp;</td>
 					</tr>
 					<tr>
 						<td colspan="3" height="5"></td>
@@ -410,7 +168,7 @@
 						</tr>
 					</thead>
 					<tr>
-						<th></th>
+						<th>&nbsp;</th>
 						<th width="50">Arrival</th>
 						<th width="50">Departure</th>
 						<th width="50">Arrival</th>
@@ -422,262 +180,11 @@
 					<?php
 
 					if($cutoff == 1) {
-						for($dtr_days=1;$dtr_days<=15;$dtr_days++) {
-
-							print '
-								<tr>
-									<td>'.$dtr_days.'</td>
-									<td>';
-										$am1 = mysql_query("SELECT time FROM log 
-										WHERE employee_id = $employee_id
-											AND year = $year
-											AND month = $month
-											AND day = $dtr_days
-											AND type = 1");
-
-										$row_am1 = mysql_fetch_assoc($am1);
-
-											if($row_am1['time'] == '') { print ''; }
-											else { print 
-												date("h:i", strtotime($row_am1['time']));
-											}	
-
-									
-									print '</td>
-									<td>';
-										$am2 = mysql_query("SELECT time FROM log 
-										WHERE employee_id = $employee_id
-											AND year = $year
-											AND month = $month
-											AND day = $dtr_days
-											AND type = 2");
-
-										$row_am2 = mysql_fetch_assoc($am2);
-
-											if($row_am2['time'] == '') { print ''; }
-											else { print 
-												date("h:i", strtotime($row_am2['time']));
-											}	
-
-									print '</td>
-									<td>';
-										$pm1 = mysql_query("SELECT time FROM log 
-										WHERE employee_id = $employee_id
-											AND year = $year
-											AND month = $month
-											AND day = $dtr_days
-											AND type = 3");
-
-										$row_pm1 = mysql_fetch_assoc($pm1);
-
-											if($row_pm1['time'] == '') { print ''; }
-											else { print 
-												date("h:i", strtotime($row_pm1['time']));
-											}	
-
-									print '
-									</td>
-									<td>';
-										$pm2 = mysql_query("SELECT time FROM log 
-										WHERE employee_id = $employee_id
-											AND year = $year
-											AND month = $month
-											AND day = $dtr_days
-											AND type = 4");
-
-										$row_pm2 = mysql_fetch_assoc($pm2);
-
-											if($row_pm2['time'] == '') { print ''; }
-											else { print 
-												date("h:i", strtotime($row_pm2['time']));
-											}	
-									print '</td>
-									<td></td>
-									<td></td>
-								</tr>
-							';
-						}		
-
-						for($extratd=16;$extratd<=31;$extratd++) {
-							print '
-								<tr>
-									<td>'.$extratd.'</td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-								</tr>
-							';	
-						}										
-					}
-
-					elseif($cutoff == 2) {
-						for($extratd=1;$extratd<=15;$extratd++) {
-							print '
-								<tr>
-									<td>'.$extratd.'</td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-								</tr>
-							';	
-						}	
-						for($dtr_days=16;$dtr_days<=31;$dtr_days++) {
-							print '
-								<tr>
-									<td>'.$dtr_days.'</td>
-									<td>';
-										$am1 = mysql_query("SELECT time FROM log 
-										WHERE employee_id = $employee_id
-											AND year = $year
-											AND month = $month
-											AND day = $dtr_days
-											AND type = 1");
-
-										$row_am1 = mysql_fetch_assoc($am1);
-
-											if($row_am1['time'] == '') { print ''; }
-											else { print 
-												date("h:i", strtotime($row_am1['time']));
-											}	
-
-									
-									print '</td>
-									<td>';
-										$am2 = mysql_query("SELECT time FROM log 
-										WHERE employee_id = $employee_id
-											AND year = $year
-											AND month = $month
-											AND day = $dtr_days
-											AND type = 2");
-
-										$row_am2 = mysql_fetch_assoc($am2);
-
-											if($row_am2['time'] == '') { print ''; }
-											else { print 
-												date("h:i", strtotime($row_am2['time']));
-											}	
-
-									print '</td>
-									<td>';
-										$pm1 = mysql_query("SELECT time FROM log 
-										WHERE employee_id = $employee_id
-											AND year = $year
-											AND month = $month
-											AND day = $dtr_days
-											AND type = 3");
-
-										$row_pm1 = mysql_fetch_assoc($pm1);
-
-											if($row_pm1['time'] == '') { print ''; }
-											else { print 
-												date("h:i", strtotime($row_pm1['time']));
-											}	
-
-									print '
-									</td>
-									<td>';
-										$pm2 = mysql_query("SELECT time FROM log 
-										WHERE employee_id = $employee_id
-											AND year = $year
-											AND month = $month
-											AND day = $dtr_days
-											AND type = 4");
-
-										$row_pm2 = mysql_fetch_assoc($pm2);
-
-											if($row_pm2['time'] == '') { print ''; }
-											else { print 
-												date("h:i", strtotime($row_pm2['time']));
-											}	
-									print '</td>
-									<td></td>
-									<td></td>
-								</tr>
-							';
-						}
-					}
-
-					elseif($cutoff == 3) {
-						for($dtr_days=1;$dtr_days<=31;$dtr_days++) {
-							print '
-								<tr>
-									<td>'.$dtr_days.'</td>
-									<td>';
-										$am1 = mysql_query("SELECT time FROM log 
-										WHERE employee_id = $employee_id
-											AND year = $year
-											AND month = $month
-											AND day = $dtr_days
-											AND type = 1");
-
-										$row_am1 = mysql_fetch_assoc($am1);
-
-											if($row_am1['time'] == '') { print ''; }
-											else { print 
-												date("h:i", strtotime($row_am1['time']));
-											}	
-
-									
-									print '</td>
-									<td>';
-										$am2 = mysql_query("SELECT time FROM log 
-										WHERE employee_id = $employee_id
-											AND year = $year
-											AND month = $month
-											AND day = $dtr_days
-											AND type = 2");
-
-										$row_am2 = mysql_fetch_assoc($am2);
-
-											if($row_am2['time'] == '') { print ''; }
-											else { print 
-												date("h:i", strtotime($row_am2['time']));
-											}	
-
-									print '</td>
-									<td>';
-										$pm1 = mysql_query("SELECT time FROM log 
-										WHERE employee_id = $employee_id
-											AND year = $year
-											AND month = $month
-											AND day = $dtr_days
-											AND type = 3");
-
-										$row_pm1 = mysql_fetch_assoc($pm1);
-
-											if($row_pm1['time'] == '') { print ''; }
-											else { print 
-												date("h:i", strtotime($row_pm1['time']));
-											}	
-
-									print '
-									</td>
-									<td>';
-										$pm2 = mysql_query("SELECT time FROM log 
-										WHERE employee_id = $employee_id
-											AND year = $year
-											AND month = $month
-											AND day = $dtr_days
-											AND type = 4");
-
-										$row_pm2 = mysql_fetch_assoc($pm2);
-
-											if($row_pm2['time'] == '') { print ''; }
-											else { print 
-												date("h:i", strtotime($row_pm2['time']));
-											}	
-									print '</td>
-									<td></td>
-									<td></td>
-								</tr>
-							';
-						}
+						require "dtr_first_cutoff.php";
+					}elseif($cutoff == 2) {
+						require "dtr_second_cutoff.php";
+					}elseif($cutoff == 3) {
+						require "dtr_fullmonth.php";
 					}
 
 					?>

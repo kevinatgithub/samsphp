@@ -36,15 +36,15 @@
   					</thead>
   					<tbody>
   						<?php
-  							$employee = mysql_query("SELECT * FROM employee");
-  							while($row = mysql_fetch_array($employee)) {
+  							$employee = mysqli_query($con,"SELECT * FROM employee");
+  							while($row = mysqli_fetch_array($employee)) {
   								print '
 		  						<tr>
 		  							<td>'.$row['employee_no'].'</td>
 		  							<td>'.$row['lname'].', '.$row['fname'].' '.$row['mname'].'</td>
 		  							<td>'.$row['position'].'</td>
 		  							<td>'.$row['office'].'</td>
-		  							<td><a class="btn btn-success" href="select2.php?employee_no='.$row['employee_no'].'" role="button">Export</a></td>
+		  							<td><a class="btn btn-success" href="select2.php?employee_no='.$row['id'].'" role="button">Export</a></td>
 		  						</tr>
   								';
   							}
