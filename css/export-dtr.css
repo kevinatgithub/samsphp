@@ -1,0 +1,54 @@
+		.container {
+			width: 900px;
+		}
+		th {
+			font-size: 9px;
+			text-transform: uppercase;
+			text-align: center;
+			padding: 3px 2px;
+		}
+		td {
+			text-align: center;
+			padding: 1px 2px;
+			font-size: 14px;
+		}
+		table.main td, th {
+			font-family: Arial;
+			border: 1px solid #000;
+			border-collapse: collapse;
+		}
+		td.blank {
+			border-bottom: 1px solid #000;
+			padding: 0px;
+		}
+		.name {
+			font-size: 17px;
+			font-weight: bold;
+			text-transform: uppercase;
+		}
+		.date {
+			font-size: 15px;
+			font-weight: bold;
+			text-transform: uppercase;
+		}
+		.col-md-4 {
+			width: 340px;
+			float: left;
+			margin-right: 18px;
+		}
+		.col-md-5 {
+			width: 340px;
+			float: left;
+			margin-left: 18px;
+		}
+
+		.left {
+			width: 45%;
+			float: left;
+			margin-right: 20px;
+		}
+
+		.right {
+			width: 45%;
+			float:right;
+		}
