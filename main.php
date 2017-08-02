@@ -1,4 +1,4 @@
-<?php include 'config/config.php';
+<?php include 'config/config.php'; 
 
 checkAccess();
 ?>
@@ -28,33 +28,8 @@ checkAccess();
   		<h1>--</h1>
   		<div class="row">
   			<div class="col-md-12">
-  				<table class="table table-condensed table-hover">
-  					<thead>
-  						<tr>
-  							<th>Employee No.</th>
-  							<th>Employee Name</th>
-  							<th>Position</th>
-  							<th>Office</th>
-  							<td>Export</td>
-  						</tr>
-  					</thead>
-  					<tbody>
-  						<?php
-  							$employee = mysqli_query($con,"SELECT * FROM employee");
-  							while($row = mysqli_fetch_array($employee)) {
-  								print '
-		  						<tr>
-		  							<td>'.$row['employee_no'].'</td>
-		  							<td>'.$row['lname'].', '.$row['fname'].' '.$row['mname'].'</td>
-		  							<td>'.$row['position'].'</td>
-		  							<td>'.$row['office'].'</td>
-		  							<td><a class="btn btn-success" href="select2.php?employee_no='.$row['id'].'" role="button">Export</a></td>
-		  						</tr>
-  								';
-  							}
-  						?>
-  					</tbody>
-  				</table>
+  				
+          <a class="btn btn-md btn-info" href="select.php">GO TO LIST</a>
   			</div>
   		</div>
   	</div>

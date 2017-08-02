@@ -1,6 +1,8 @@
 <?php
 	include "config/config.php";
 
+	checkAccess();
+
 	$employee_no = $_REQUEST['employee_no'];
 	$month = $_REQUEST['month'] * 1;
 	$cutoff = $_REQUEST['cutoff'];
@@ -10,20 +12,27 @@
 
 	$employee = mysqli_query($con,"SELECT * FROM employee WHERE id = '$employee_no'");
 	$row = @mysqli_fetch_array($employee);
-		$employee_id = $row['id'];
-		$print_month = strftime("%B",mktime(0,0,0,$month));
+	$employee_id = $row['id'];
+	$print_month = strftime("%B",mktime(0,0,0,$month));
 
-		switch ($cutoff){
-			case 1:
-				$print_cutoff = '1-15';
-			break;
-			case 2:
-				$print_cutoff = '16-'.$month_days;
-			break;
-			case 3:
-			default:
-				$print_cutoff = '1-'.$month_days;
-		}
+	switch ($cutoff){
+		case 1:
+			$print_cutoff = '1-15';
+		break;
+		case 2:
+			$print_cutoff = '16-'.$month_days;
+		break;
+		case 3:
+		default:
+			$print_cutoff = '1-'.$month_days;
+	}
+
+	$office_rs = mysqli_query($con,"SELECT * FROM office WHERE id = '".$row["office"]."'") or exit(mysqli_error($con));
+	$signatory = "";
+	if(mysqli_num_rows($office_rs)){
+		$signatory = mysqli_fetch_object($office_rs)->signatory;
+	}
+	
 ?>
 <!DOCTYPE html>
 <html>
@@ -98,37 +107,18 @@
 				<br>
 				<table width="100%" class="subs">
 					<tr>
-						<td class="text-left"><small>I CERTIFY on my honor that the above is a true and correct report of the hours of work performed, record of which was made daily at the time of arrival at and departure from office.</small></td>
+						<td class="text-left"><small>System Generated, Authorized Copy. Verified by:</small></td>
 					</tr>
 					<tr>
 						<td class="blank"><br><br></td>
 					</tr>
 					<tr>
-						<td><small>SIGNATURE</small></td>
+						<td><small>KEVIN PORFERIO D. CAINDAY</small><br/>Date Printed: <?=date('F d, Y')?></td>
 					</tr>
-					<tr>
-						<td class="blank"><br><br></td>
-					</tr>
-					<tr>
-						<td><small>IMMEDIATE SUPERVISOR</small></td>
-					</tr>
-					<tr>
-						<td><small>
-						Verified as to the prescribed office hours.
-						</small>
-						</td>
-					</tr>
-					<tr>
-						<td class="blank"><br><br></td>
-					</tr>
-					<tr>
-						<td><small>JULIUS A. LECCIONES, MD, MHSA, MPM, MScHSM, CESO III<br>
-						Executive Director</small></td>
-					</tr>
-				</table>
+					</table>
 			</div>
 
-			<div class="left">
+			<div class="left" style="margin-left:3.1em;">
 				<center>
 				<b><p>DAILY TIME RECORD</p></b>
 				</center>
@@ -191,36 +181,18 @@
 					</tbody>
 				</table>
 				<br>
-				<table width="100%" class="subs">
+					<table width="100%" class="subs">
 					<tr>
-						<td class="text-left"><small>I CERTIFY on my honor that the above is a true and correct report of the hours of work performed, record of which was made daily at the time of arrival at and departure from office.</small></td>
+						<td class="text-left"><small>System Generated, Authorized Copy. Verified by:</small></td>
 					</tr>
 					<tr>
 						<td class="blank"><br><br></td>
 					</tr>
 					<tr>
-						<td><small>SIGNATURE</small></td>
+						<td><small>KEVIN PORFERIO D. CAINDAY</small><br/>Date Printed: <?=date('F d, Y')?></td>
 					</tr>
-					<tr>
-						<td class="blank"><br><br></td>
-					</tr>
-					<tr>
-						<td><small>IMMEDIATE SUPERVISOR</small></td>
-					</tr>
-					<tr>
-						<td><small>
-						Verified as to the prescribed office hours.
-						</small>
-						</td>
-					</tr>
-					<tr>
-						<td class="blank"><br><br></td>
-					</tr>
-					<tr>
-						<td><small>JULIUS A. LECCIONES, MD, MHSA, MPM, MScHSM, CESO III<br>
-						Executive Director</small></td>
-					</tr>
-				</table>
+					</table>
+
 			</div>
 	</div>
 </body>
