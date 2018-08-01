@@ -4,8 +4,8 @@ include 'config/config.php';
 $Message = '';
 
   if(isset($_POST['cmdLogin'])){
-    $username = mysql_real_escape_string(trim($_POST['txtUN']));
-    $password = md5(mysql_real_escape_string(trim($_POST['txtPW'])));
+    $username = mysqli_real_escape_string($con,trim($_POST['txtUN']));
+    $password = md5(mysqli_real_escape_string($con,trim($_POST['txtPW'])));
 
     if($username&&$password){
       $query  = " SELECT * FROM `user` WHERE `username` = '".$username."' ";
