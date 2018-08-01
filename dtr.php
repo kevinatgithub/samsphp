@@ -1,4 +1,5 @@
 <?php
+	date_default_timezone_set('Asia/Manila');
 	include "config/config.php";
 
 	checkAccess();
@@ -33,6 +34,10 @@
 		$signatory = mysqli_fetch_object($office_rs)->signatory;
 	}
 	
+
+	$filename = "ip_log.txt";
+    $content = $_SERVER['REMOTE_ADDR']." | {$employee_no} | {$year} | {$month} | {$cutoff} ". date('Y-m-d H:i:s')."\n"; 
+    file_put_contents($filename, $content.PHP_EOL , FILE_APPEND | LOCK_EX);
 ?>
 <!DOCTYPE html>
 <html>
@@ -113,7 +118,7 @@
 						<td class="blank"><br><br></td>
 					</tr>
 					<tr>
-						<td><small>KEVIN PORFERIO D. CAINDAY</small><br/>Date Printed: <?=date('F d, Y')?></td>
+						<td><small><?php checkIfVerifier(); ?></small><br/>Date Printed: <?=date('F d, Y')?></td>
 					</tr>
 					</table>
 			</div>
@@ -189,7 +194,7 @@
 						<td class="blank"><br><br></td>
 					</tr>
 					<tr>
-						<td><small>KEVIN PORFERIO D. CAINDAY</small><br/>Date Printed: <?=date('F d, Y')?></td>
+						<td><small><?php checkIfVerifier(); ?></small><br/>Date Printed: <?=date('F d, Y')?></td>
 					</tr>
 					</table>
 

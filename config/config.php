@@ -2,7 +2,7 @@
 
 $host		="localhost"; 	// Host name 
 $username	="root"; 		// Mysql username 
-$password	="d0hn88n37s"; 		// Mysql password 
+$password	=""; 		// Mysql password 
 $db_name	="sams"; 	// Database name 
 
 $con = mysqli_connect("$host", "$username", "$password")or die("cannot connect"); 
@@ -11,9 +11,11 @@ mysqli_select_db($con,"$db_name")or die("Cannot connect to database");
 
 session_start();
 $_fullname = isset($_SESSION['name']) ? $_SESSION['name'] : null;
+$_ulevel = isset($_SESSION['ulevel']) ? $_SESSION['ulevel'] : null;
 $_username = isset($_SESSION["username"]) ? $_SESSION["username"] : null;
 
 define("FULLNAME",$_fullname);
+define("USER_LEVEL",$_ulevel);
 define("USER_NAME",$_username);
 
 function GetDTRTimeEntry($employee_id,$year,$month,$day,$type,$override){
@@ -49,5 +51,13 @@ function checkAccess(){
 		header("location:index.php");
 		exit;
 	}
+}
+function checkIfVerifier(){
+	if(USER_LEVEL == 0){
+		echo strtoupper(FULLNAME);
+	}else{
+		echo "KEVIN PORFERIO D. CAINDAY";
+	}
+
 }
 ?>

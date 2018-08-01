@@ -13,12 +13,13 @@ $Message = '';
       while($row = mysqli_fetch_array($result)){
         $fullname = $row['name'];
         $username = $row['username'];
+        $ulevel = $row['ulevel'];
         $dbpassword = $row['password'];
-
         if($password == $dbpassword){
           /* start session */
           session_name('dtr_session');
           $_SESSION['name'] = $fullname;
+          $_SESSION['ulevel'] = $ulevel;
           $_SESSION['username'] = $username;
           exit("<script>document.location.href='main.php';</script>\n");   
         }
