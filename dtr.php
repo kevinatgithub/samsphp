@@ -2,12 +2,18 @@
 	date_default_timezone_set('Asia/Manila');
 	include "config/config.php";
 
-	checkAccess();
+	// checkAccess();
 
 	$employee_no = $_REQUEST['employee_no'];
 	$month = $_REQUEST['month'] * 1;
 	$cutoff = $_REQUEST['cutoff'];
 	$year = $_REQUEST['year'];
+	$saturdays = $_REQUEST['saturdays'];
+	$sundays = $_REQUEST['sundays'];
+	$holidays = $_REQUEST['holidays'];
+	$absents = $_REQUEST['absents'];
+	$off = $_REQUEST['off'];
+
 
 	$month_days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
 
@@ -36,7 +42,7 @@
 	
 
 	$filename = "ip_log.txt";
-    $content = $_SERVER['REMOTE_ADDR']." | {$employee_no} | {$year} | {$month} | {$cutoff} ". date('Y-m-d H:i:s')."\n"; 
+    $content = $_SERVER['REMOTE_ADDR']." | ".USER_NAME. " | {$employee_no} | {$year} | {$month} | {$cutoff} ". date('Y-m-d H:i:s')."\n"; 
     file_put_contents($filename, $content.PHP_EOL , FILE_APPEND | LOCK_EX);
 ?>
 <!DOCTYPE html>
@@ -44,12 +50,17 @@
 <head>
 	<title>DTR</title>
 	<link rel="stylesheet" type="text/css" href="css/export-dtr.css">
+<script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script>
 </head>
 <body>
 	<div class="container">
 			<div class="left">
+				<small>Civil Service Form No. 48</small>
 				<center>
-				<b><p>DAILY TIME RECORD</p></b>
+				<b><p style="font-size:12px;">DAILY TIME RECORD</p></b>
 				</center>
 
 				<table width="100%" class="subs">
@@ -108,24 +119,56 @@
 
 					?>
 					</tbody>
+					<tr >
+						<th style="border:none;"></th>
+						<th style="border:none;font-size:12px;">TOTAL</th>
+						<!-- <th colspan="2" style="border:none;border-bottom:3px solid #000;"></th> -->
+						<th colspan="2" style="border-left:none;border-right:none;" class="blank name">&nbsp;</th>
+						<th colspan="3" style="border:none;"></th>
+					</tr>
+					<tr>
+						<th style="border:none;"></th>
+						<th colspan="6" style="border:none;font-size:12px;text-align:left;text-transform:none;">
+						<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							I CERTIFY on my honor that the above is a true<br/><br/> 
+							and correct report of the hours of work performed, record<br/><br/>
+							 of which was made daily at the time of arrival at and <br/><br/>
+							departure from office.
+						</th>
+					</tr>
+					<tr>
+						<th style="border:none;"></th>
+						<th colspan="6" style="border-left:none;border-right:none;border-top:none;height:30px;" class="blank name">&nbsp;</th>
+					</tr>
+					<tr>
+						<th style="border:none;"></th>
+						<th colspan="6" style="border:none;text-transform:none;font-size:12px;">Signature</th>
+					</tr>
+					<tr>
+						<th style="border:none;"></th>
+						<th colspan="6" style="border:none;text-transform:none;font-size:12px;"><br/><br/>
+							Verified as to the prescribed office hours.
+						</th>
+					</tr>
+					<tr>
+						<th style="border:none;"></th>
+						<th colspan="6" style="border-left:none;border-right:none;border-top:none;height:30px;" class="blank name">&nbsp;</th>
+					</tr>
+					<tr>
+						<th style="border:none;"></th>
+						<th colspan="6" style="border:none;text-transform:none;font-size:10px;font-weight:bold;font-size:12px;">
+						MARITES B. ESTRELLA, RN, MM, MDM<br/>
+						<i>Program Manager, NVBSP</i>
+						</th>
+					</tr>
 				</table>
-				<br>
-				<table width="100%" class="subs">
-					<tr>
-						<td class="text-left"><small>System Generated, Authorized Copy. Verified by:</small></td>
-					</tr>
-					<tr>
-						<td class="blank"><br><br></td>
-					</tr>
-					<tr>
-						<td><small><?php checkIfVerifier(); ?></small><br/>Date Printed: <?=date('F d, Y')?></td>
-					</tr>
-					</table>
 			</div>
 
 			<div class="left" style="margin-left:3.1em;">
+				<small>Civil Service Form No. 48</small>
 				<center>
-				<b><p>DAILY TIME RECORD</p></b>
+				<b><p style="font-size:12px;">DAILY TIME RECORD</p></b>
 				</center>
 
 				<table width="100%" class="subs">
@@ -184,21 +227,85 @@
 
 					?>
 					</tbody>
+					<tr >
+						<th style="border:none;"></th>
+						<th style="border:none;font-size:12px;">TOTAL</th>
+						<!-- <th colspan="2" style="border:none;border-bottom:3px solid #000;"></th> -->
+						<th colspan="2" style="border-left:none;border-right:none;" class="blank name">&nbsp;</th>
+						<th colspan="3" style="border:none;"></th>
+					</tr>
+					<tr>
+						<th style="border:none;"></th>
+						<th colspan="6" style="border:none;font-size:12px;text-align:left;text-transform:none;">
+						<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							I CERTIFY on my honor that the above is a true<br/><br/> 
+							and correct report of the hours of work performed, record<br/><br/>
+							 of which was made daily at the time of arrival at and <br/><br/>
+							departure from office.
+						</th>
+					</tr>
+					<tr>
+						<th style="border:none;"></th>
+						<th colspan="6" style="border-left:none;border-right:none;border-top:none;height:30px;" class="blank name">&nbsp;</th>
+					</tr>
+					<tr>
+						<th style="border:none;"></th>
+						<th colspan="6" style="border:none;text-transform:none;font-size:12px;">Signature</th>
+					</tr>
+					<tr>
+						<th style="border:none;"></th>
+						<th colspan="6" style="border:none;text-transform:none;font-size:12px;"><br/><br/>
+							Verified as to the prescribed office hours.
+						</th>
+					</tr>
+					<tr>
+						<th style="border:none;"></th>
+						<th colspan="6" style="border-left:none;border-right:none;border-top:none;height:30px;" class="blank name">&nbsp;</th>
+					</tr>
+					<tr>
+						<th style="border:none;"></th>
+						<th colspan="6" style="border:none;text-transform:none;font-size:10px;font-weight:bold;font-size:12px;">
+						MARITES B. ESTRELLA, RN, MM, MDM<br/>
+						<i>Program Manager, NVBSP</i>
+						</th>
+					</tr>
 				</table>
-				<br>
-					<table width="100%" class="subs">
-					<tr>
-						<td class="text-left"><small>System Generated, Authorized Copy. Verified by:</small></td>
-					</tr>
-					<tr>
-						<td class="blank"><br><br></td>
-					</tr>
-					<tr>
-						<td><small><?php checkIfVerifier(); ?></small><br/>Date Printed: <?=date('F d, Y')?></td>
-					</tr>
-					</table>
 
 			</div>
 	</div>
+	<script>
+		var saturdays_str = <?=json_encode($saturdays)?>;
+		var sundays_str = <?=json_encode($sundays)?>;
+		var holidays_str = <?=json_encode($holidays)?>;
+		var absents_str = <?=json_encode($absents)?>;
+		var off_str = <?=json_encode($off)?>;
+
+		var sats = saturdays_str.split(',');
+		var suns = sundays_str.split(',');
+		var hols = holidays_str.split(',');
+		var abs = absents_str.split(',');
+		var off = off_str.split(',');
+		$(function(){
+			sats.forEach(sat=>{
+				modify(sat,'SATURDAY');
+			});
+			suns.forEach(sat=>{
+				modify(sat,'SUNDAY');
+			});
+			hols.forEach(sat=>{
+				modify(sat,'HOLIDAY');
+			});
+			abs.forEach(sat=>{
+				modify(sat,'ABSENT');
+			});
+			off.forEach(sat=>{
+				modify(sat,'off');
+			});
+		})
+		function modify(day,event){
+			$("tr.entry:nth-child("+day+")").replaceWith('<tr><td>'+day+'</td><td colspan=4>'+event.toUpperCase()+'</td><td></td><td></td></tr>')
+		}
+	</script>
 </body>
 </html>

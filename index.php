@@ -17,10 +17,11 @@ $Message = '';
         $dbpassword = $row['password'];
         if($password == $dbpassword){
           /* start session */
-          session_name('dtr_session');
+          // session_name('dtr_session');
           $_SESSION['name'] = $fullname;
           $_SESSION['ulevel'] = $ulevel;
           $_SESSION['username'] = $username;
+          // exit('ads');
           exit("<script>document.location.href='main.php';</script>\n");   
         }
         else{

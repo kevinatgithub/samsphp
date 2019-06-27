@@ -2,7 +2,7 @@
 
 $host		="localhost"; 	// Host name 
 $username	="root"; 		// Mysql username 
-$password	=""; 		// Mysql password 
+$password	="d0hn88n37s"; 		// Mysql password 
 $db_name	="sams"; 	// Database name 
 
 $con = mysqli_connect("$host", "$username", "$password")or die("cannot connect"); 

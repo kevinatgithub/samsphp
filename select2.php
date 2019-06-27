@@ -42,13 +42,13 @@ $employee_no = $_GET['employee_no'];
                 </h3>
                 <div class="form-group">
                   <label for="">Year</label>
-                  <input type="text" name="year" id="year" class="form-control" value="2017" required="required">
+                  <input type="text" name="year" id="year" class="form-control" value="2019" required="required">
                 </div>                   
                 <div class="form-group">
                   <label for="">Month</label>
                   <select id="month" name="month" class="form-control" required="required">
                     <option value="01">January</option>
-                    <option value="02">February</option>
+                    <option value="02" selected>February</option>
                     <option value="03">March</option>
                     <option value="04">April</option>
                     <option value="05">May</option>
@@ -68,7 +68,27 @@ $employee_no = $_GET['employee_no'];
                     <option value="2">2nd</option>
                     <option value="3">Full</option>
                   </select>
-                </div>              
+                </div>
+                <div class="form-group">
+                  <label for="">Saturdays</label>
+                  <input type="text" name="saturdays" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label for="">Sundays</label>
+                  <input type="text" name="sundays" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label for="">Holidays</label>
+                  <input type="text" name="holidays" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label for="">Absents</label>
+                  <input type="text" name="absents" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label for="">Off</label>
+                  <input type="text" name="off" class="form-control">
+                </div>
                 
                 <button type="submit" class="btn btn-primary">Submit</button>
               </form>

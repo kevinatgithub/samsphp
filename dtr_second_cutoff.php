@@ -30,7 +30,7 @@ for($dtr_days=16;$dtr_days<=31;$dtr_days++) {
 	}
 	
 	print '
-		<tr>
+		<tr class="entry">
 			<td>'.$dtr_days.'</td>';
 
 	print  '<td>';
@@ -45,9 +45,16 @@ for($dtr_days=16;$dtr_days<=31;$dtr_days++) {
 	print '</td>';
 	print '<td>';
 			print GetDTRTimeEntry($employee_id,$year,$month,$dtr_days,4,$override);
-	print '</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-		</tr>
-	';
+	if(count($override) > 0){
+		$res = reset($override);
+		print '</td>
+			<td colspan=2 nowrap style="font-size:10px;">'.$res->reason.'</td>
+		</tr>';
+	}else{
+		print '</td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+			</tr>
+		';
+	}
 }
