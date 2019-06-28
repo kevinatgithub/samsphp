@@ -13,6 +13,9 @@
 	$holidays = $_REQUEST['holidays'];
 	$absents = $_REQUEST['absents'];
 	$off = $_REQUEST['off'];
+	$ot = isset($_REQUEST['ot']) ? $_REQUEST['ot'] : '';
+	$signatory = $_REQUEST['signatory'];
+	$position = $_REQUEST['position'];
 
 
 	$month_days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
@@ -34,11 +37,11 @@
 			$print_cutoff = '1-'.$month_days;
 	}
 
-	$office_rs = mysqli_query($con,"SELECT * FROM office WHERE id = '".$row["office"]."'") or exit(mysqli_error($con));
-	$signatory = "";
-	if(mysqli_num_rows($office_rs)){
-		$signatory = mysqli_fetch_object($office_rs)->signatory;
-	}
+	// $office_rs = mysqli_query($con,"SELECT * FROM office WHERE id = '".$row["office"]."'") or exit(mysqli_error($con));
+	// $signatory = "";
+	// if(mysqli_num_rows($office_rs)){
+	// 	$signatory = mysqli_fetch_object($office_rs)->signatory;
+	// }
 	
 
 	$filename = "ip_log.txt";
@@ -158,8 +161,8 @@
 					<tr>
 						<th style="border:none;"></th>
 						<th colspan="6" style="border:none;text-transform:none;font-size:10px;font-weight:bold;font-size:12px;">
-						MARITES B. ESTRELLA, RN, MM, MDM<br/>
-						<i>Program Manager, NVBSP</i>
+						<?=$signatory?><br/>
+						<i><?=$position?></i>
 						</th>
 					</tr>
 				</table>
@@ -266,8 +269,8 @@
 					<tr>
 						<th style="border:none;"></th>
 						<th colspan="6" style="border:none;text-transform:none;font-size:10px;font-weight:bold;font-size:12px;">
-						MARITES B. ESTRELLA, RN, MM, MDM<br/>
-						<i>Program Manager, NVBSP</i>
+						<?=$signatory?><br/>
+						<i><?=$position?></i>
 						</th>
 					</tr>
 				</table>
@@ -286,6 +289,8 @@
 		var hols = holidays_str.split(',');
 		var abs = absents_str.split(',');
 		var off = off_str.split(',');
+		var ot = <?=json_encode($ot)?>;
+
 		$(function(){
 			sats.forEach(sat=>{
 				modify(sat,'SATURDAY');
@@ -304,7 +309,16 @@
 			});
 		})
 		function modify(day,event){
-			$("tr.entry:nth-child("+day+")").replaceWith('<tr><td>'+day+'</td><td colspan=4>'+event.toUpperCase()+'</td><td></td><td></td></tr>')
+			var remark = "<td></td><td></td>";
+			var tr = $("tr.entry:nth-child("+day+")");
+			if(event=='HOLIDAY' && ot == 'on'){
+				var td1 = tr.find("td:nth-child(2)").first().text()
+				var td2 = tr.find("td:nth-child(5)").first().text()
+				if(td1 != '' && td2 != ''){
+					remark ="<td colspan=2>Overtime</td>"
+				}
+			}
+			tr.replaceWith('<tr class="entry"><td>'+day+'</td><td colspan=4>'+event.toUpperCase()+'</td>'+remark+'</tr>')
 		}
 	</script>
 </body>

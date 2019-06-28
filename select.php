@@ -49,7 +49,7 @@ checkAccess();
 		  							<td>'.$row['lname'].', '.$row['fname'].' '.$row['mname'].'</td>
 		  							<td>'.$row['position'].'</td>
 		  							<td>'.$row['office'].'</td>
-		  							<td><a class="btn btn-success" href="select2.php?employee_no='.$row['id'].'" role="button">Export</a></td>
+		  							<td><a class="btn btn-success" href="select2.php?employee_no='.$row['id'].'" role="button" target="_blank">Export</a></td>
 		  						</tr>
   								';
   							}
