@@ -309,6 +309,9 @@
 			});
 		})
 		function modify(day,event){
+			if(isNaN(day) || day == ''){
+				return
+			}
 			var remark = "<td></td><td></td>";
 			var tr = $("tr.entry:nth-child("+day+")");
 			if(event=='HOLIDAY' && ot == 'on'){
