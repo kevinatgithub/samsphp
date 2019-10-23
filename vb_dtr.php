@@ -36,6 +36,7 @@
 	$half_days = $_REQUEST['half_days'];
 	$clear_entries = $_REQUEST['clear_entries'];
 
+	// print_r($_REQUEST);
 
 	$month_days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
 
@@ -69,49 +70,7 @@
 </head>
 <body>
 	<div class="container">
-			
 			<?php include("vb_dtr_column.php") ?>
 	</div>
-	<script>
-		var sats = saturdays_str.split(',');
-		var suns = sundays_str.split(',');
-		var hols = holidays_str.split(',');
-		var abs = absents_str.split(',');
-		var off = off_str.split(',');
-		var ot = <?=json_encode($ot)?>;
-
-		$(function(){
-			sats.forEach(sat=>{
-				modify(sat,'SATURDAY');
-			});
-			suns.forEach(sat=>{
-				modify(sat,'SUNDAY');
-			});
-			hols.forEach(sat=>{
-				modify(sat,'HOLIDAY');
-			});
-			abs.forEach(sat=>{
-				modify(sat,'ABSENT');
-			});
-			off.forEach(sat=>{
-				modify(sat,'off');
-			});
-		})
-		function modify(day,event){
-			if(isNaN(day) || day == ''){
-				return
-			}
-			var remark = "<td></td><td></td>";
-			var tr = $("tr.entry:nth-child("+day+")");
-			if(event=='HOLIDAY' && ot == 'on'){
-				var td1 = tr.find("td:nth-child(2)").first().text()
-				var td2 = tr.find("td:nth-child(5)").first().text()
-				if(td1 != '' && td2 != ''){
-					remark ="<td colspan=2>Overtime</td>"
-				}
-			}
-			tr.replaceWith('<tr class="entry"><td>'+day+'</td><td colspan=4>'+event.toUpperCase()+'</td>'+remark+'</tr>')
-		}
-	</script>
 </body>
 </html>
