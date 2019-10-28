@@ -93,13 +93,13 @@ function GetDTRRow($employee_id,$month,$dtr_days,$year){
 
     // Check for offs
     if(array_search($dtr_days,$offs) !== false){
-        print '<tr><td>'.$dtr_days.'</td><td colspan="4">OFF</td><td></td><td></td></tr>';
+        print '<tr><td>'.$dtr_days.'</td><td colspan="4">OFF</td><td>&nbsp;</td><td>&nbsp;</td></tr>';
         return;
     }
 
     // Check for absents
     if(array_search($dtr_days,$absents) !== false){
-        print '<tr><td>'.$dtr_days.'</td><td colspan="4">ABSENT</td><td></td><td></td></tr>';
+        print '<tr><td>'.$dtr_days.'</td><td colspan="4">ABSENT</td><td>&nbsp;</td><td>&nbsp;</td></tr>';
         return;
     }
 
