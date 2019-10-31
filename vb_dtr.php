@@ -33,7 +33,8 @@
 	$shifting_days_str = $_REQUEST['shifting_days'];
 	$shifting_days = explode(",",$shifting_days_str);
 
-	$half_days = $_REQUEST['half_days'];
+	$half_days_str = $_REQUEST['half_days'];
+	$half_days = explode(",",$half_days_str);
 	$clear_entries = $_REQUEST['clear_entries'];
 
 	// print_r($_REQUEST);

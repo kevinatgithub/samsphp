@@ -191,6 +191,7 @@ function GetDTREntry($employee_id,$year,$month,$day,$type,$override,$time_entry)
 function GetComputedTardy($year,$month,$day,$entries){
     global $shifting_days;
     global $holidays;
+    global $half_days;
 
     // todo : compute tardy
     // return '<td>&nbsp;</td><td>&nbsp;</td>';
@@ -224,6 +225,10 @@ function GetComputedTardy($year,$month,$day,$entries){
     // Monday apply 7:00 - 8:00 with lunch
     if($dayOfWeek == 1 && array_search($day,$shifting_days) === false){
         return GetTardy($entries,true,'7:00','8:00');
+    }
+    // Halfday apply 8:00 to 12:00 
+    if(($dayOfWeek > 1 &&  $dayOfWeek < 6) &&  array_search($day,$half_days) !== false){
+        return GetTardyHalfday($entries);
     }
 
     // Thuesday to Friday apply 7:00 - 9:30 with lunch
@@ -270,6 +275,51 @@ function GetTardy($entries,$lunch,$earliest,$latest){
     
     
     $am_in = !empty($entries['am_in']) ? strtotime(date("Y-m-d ") . $entries['am_in']) : null;
+    if($latest == "14:00"){
+        $am_in = add12Hours($entries['pm_in']);
+        $am_in = !empty($am_in) ? strtotime(date("Y-m-d ") . $am_in) : null;
+    }
+    $am_out = !empty($entries['am_out']) ? strtotime(date("Y-m-d ") . $entries['am_out']) : null;
+    $pm_in = !empty($entries['pm_in']) ? strtotime(date("Y-m-d ") . $pm_in) : null;
+    $pm_out = !empty($entries['pm_out']) ? strtotime(date("Y-m-d ") . $pm_out) : null;
+    $work_hours = $lunch ? 9 : 8;
+    $latest = strtotime(date("Y-m-d ") . $latest);
+    $latest_out = $latest + (60*60*$work_hours);
+
+    $am_late_seconds = ($am_in - $latest);
+    $am_late = $am_late_seconds <= 0 ? 0 : $am_late_seconds;
+
+    $pm_undertime_seconds = 0;
+    $expected_out = $am_in + (60*60*$work_hours);
+    $expected_out = $expected_out > $latest_out ? $latest_out : $expected_out;
+    if($pm_out < $expected_out){
+        $pm_undertime_seconds = ($expected_out - $pm_out) + 60;
+    }
+    $pm_undertime = $pm_undertime_seconds <= 0 ? 0 : $pm_undertime_seconds;
+
+    $tardy = ($am_late + $pm_undertime) / 60;
+
+    return '<td>'.floor($tardy / 60).'&nbsp;</td><td>'.($tardy % 60).'&nbsp;</td>';
+}
+
+function GetTardyHalfday($entries){
+    $lunch = false;
+    $earliest = "8:00";
+    $latest = "8:00";
+    // check data completeness
+    if($entries['am_in'] == "&nbsp;" || $entries['am_out'] == "&nbsp;"){
+        return '<td>&nbsp;</td><td>&nbsp;</td>';
+    }
+
+    $pm_in = add12Hours($entries['pm_in']);
+    $pm_out = add12Hours($entries['am_out']);
+    
+    
+    $am_in = !empty($entries['am_in']) ? strtotime(date("Y-m-d ") . $entries['am_in']) : null;
+    if($latest == "14:00"){
+        $am_in = add12Hours($entries['pm_in']);
+        $am_in = !empty($am_in) ? strtotime(date("Y-m-d ") . $am_in) : null;
+    }
     $am_out = !empty($entries['am_out']) ? strtotime(date("Y-m-d ") . $entries['am_out']) : null;
     $pm_in = !empty($entries['pm_in']) ? strtotime(date("Y-m-d ") . $pm_in) : null;
     $pm_out = !empty($entries['pm_out']) ? strtotime(date("Y-m-d ") . $pm_out) : null;
