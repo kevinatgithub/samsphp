@@ -83,6 +83,7 @@ function GetDTRRow($employee_id,$month,$dtr_days,$year){
     global $sundays;
     global $offs;
     global $absents;
+    global $half_days;
 
     // Check for whole day overrides
     $override = GetOverrideOfDay($year,$month,$dtr_days,$employee_id);
@@ -146,17 +147,34 @@ function GetDTRRow($employee_id,$month,$dtr_days,$year){
 
     print '<td>';
             $am_out = GetDTREntry($employee_id,$year,$month,$dtr_days,2,$override,$am_out);
-            print $am_out;
+            $pm_out = GetDTREntry($employee_id,$year,$month,$dtr_days,4,$override,$pm_out);
+            if(array_search($dtr_days,$half_days) !== false){
+                if($am_out == "&nbsp;"){
+                    print $pm_out;
+                }else{
+                    print $am_out;
+                }
+            }else{
+                print $am_out;
+            }
     print '</td>';
 
     print '<td>';
             $pm_in = GetDTREntry($employee_id,$year,$month,$dtr_days,3,$override,$pm_in);
-            print  $pm_in;
+            if(array_search($dtr_days,$half_days) !== false){
+                print "&nbsp;";
+            }else{
+                print  $pm_in;
+            }
     print '</td>';
 
     print '<td>';
             $pm_out = GetDTREntry($employee_id,$year,$month,$dtr_days,4,$override,$pm_out);
-            print $pm_out;
+            if(array_search($dtr_days,$half_days) !== false){
+                print "&nbsp;";
+            }else{
+                print $pm_out;
+            }
     print '</td>';
 
     if(count($override) > 0){
@@ -299,48 +317,54 @@ function GetTardy($entries,$lunch,$earliest,$latest){
 
     $tardy = ($am_late + $pm_undertime) / 60;
 
-    return '<td>'.floor($tardy / 60).'&nbsp;</td><td>'.($tardy % 60).'&nbsp;</td>';
+    return '<td>'.floor($tardy / 60).'</td><td>'.($tardy % 60).'</td>';
 }
 
 function GetTardyHalfday($entries){
     $lunch = false;
     $earliest = "8:00";
     $latest = "8:00";
+
     // check data completeness
     if($entries['am_in'] == "&nbsp;" || $entries['am_out'] == "&nbsp;"){
-        return '<td>&nbsp;</td><td>&nbsp;</td>';
+        if($entries['am_in'] == "&nbsp;"){
+            return '<td>&nbsp;</td><td>&nbsp;</td>';
+        }else if($entries['am_out'] == "&nbsp;" && $entries['pm_out'] == "&nbsp;"){
+            return '<td>&nbsp;</td><td>&nbsp;</td>';
+        }
     }
 
-    $pm_in = add12Hours($entries['pm_in']);
-    $pm_out = add12Hours($entries['am_out']);
-    
-    
-    $am_in = !empty($entries['am_in']) ? strtotime(date("Y-m-d ") . $entries['am_in']) : null;
-    if($latest == "14:00"){
-        $am_in = add12Hours($entries['pm_in']);
-        $am_in = !empty($am_in) ? strtotime(date("Y-m-d ") . $am_in) : null;
+    if($entries['am_out'] == "&nbsp;"){
+        $entries['am_out'] = $entries['pm_out'];
     }
-    $am_out = !empty($entries['am_out']) ? strtotime(date("Y-m-d ") . $entries['am_out']) : null;
-    $pm_in = !empty($entries['pm_in']) ? strtotime(date("Y-m-d ") . $pm_in) : null;
-    $pm_out = !empty($entries['pm_out']) ? strtotime(date("Y-m-d ") . $pm_out) : null;
-    $work_hours = $lunch ? 9 : 8;
+
+    $entries['am_out'] = add12Hours($entries['am_out']);
+   
+    $am_in = strtotime(date("Y-m-d ") . $entries['am_in']);
+    $am_out = strtotime(date("Y-m-d ") . $entries['am_out']);
+
+    $work_hours = 4;
+
     $latest = strtotime(date("Y-m-d ") . $latest);
     $latest_out = $latest + (60*60*$work_hours);
 
     $am_late_seconds = ($am_in - $latest);
     $am_late = $am_late_seconds <= 0 ? 0 : $am_late_seconds;
 
-    $pm_undertime_seconds = 0;
+    $am_undertime_seconds = 0;
+    
     $expected_out = $am_in + (60*60*$work_hours);
     $expected_out = $expected_out > $latest_out ? $latest_out : $expected_out;
-    if($pm_out < $expected_out){
-        $pm_undertime_seconds = ($expected_out - $pm_out) + 60;
+    
+    if($am_out < $expected_out){
+        $am_undertime_seconds = ($expected_out - $am_out) + 60;
     }
-    $pm_undertime = $pm_undertime_seconds <= 0 ? 0 : $pm_undertime_seconds;
 
-    $tardy = ($am_late + $pm_undertime) / 60;
+    $am_undertime = $am_undertime_seconds <= 0 ? 0 : $am_undertime_seconds;
 
-    return '<td>'.floor($tardy / 60).'&nbsp;</td><td>'.($tardy % 60).'&nbsp;</td>';
+    $tardy = ($am_late + $am_undertime) / 60;
+
+    return '<td>'.floor($tardy / 60).'</td><td>'.($tardy % 60).'</td>';
 }
 
 function add12Hours($time){
